@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tela de telefones</title>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.12/jquery.mask.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.12/jquery.mask.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+
+<div class="main-title" style="display: flex; align-items: center; justify-content:center">
+    <a href="/listarTodos"><span class="material-icons">
+        keyboard_return
+    </span></a><br><br><br><br>
+    <h2 style="text-align:center">Informações do Usuário</h2>
+</div>
+
+    <table class="centered" style="margin-bottom:35px;">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Email</th>
+                <th>Senha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${pessoaobj}">
+                <td><span th:text="${p.id}"></span></td>
+                <td><span th:text="${p.nome}"></span></td>
+                <td><span th:text="${p.sobrenome}"></span></td>
+                <td><span th:text="${p.email}"></span></td>
+                <td><span th:text="${p.senha}"></span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="telefones">
+        <h2 style="text-align:center">Lista de telefones</h2>
+        <br><br>
+        
+       	<div style="display: flex; justify-content: center" th:each = "m : ${msgs}">
+			<span style="color: red;" th:text = "${m}"></span>
+		</div><br><br>
+
+        <table class="centered" style="margin-bottom: 40px;">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Data do cadastro</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="t : ${telefones}">
+                    <td><span th:text="${t.numero}"></span></td>
+                    <td><span th:text="${t.tipo}"></span></td>
+                    <td><span th:text="${t.data_cadastro}"></span></td>
+                    <td><a th:href = "@{/removerTelefone/{idfone}(idfone=${t.id_telefone})}"><span class="material-icons">
+						delete
+					</span></a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 style="text-align:center">Cadastrar telefones:</h2>
+        <br><br>
+
+        <form th:action="@{/salvarTelefone/{pessoaid}(pessoaid=${pessoaobj.id})}" method="POST" style="margin-right: 200px; margin-left: 200px; margin-top: 25px; margin-bottom: 50px">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="numero" type="text" class="validate" name="numero">
+                    <label for="numero">Numero:</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="tipo" type="text" class="validate" name="tipo">
+                    <label for="tipo">Tipo:</label>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Cadastrar número
+                <i class="material-icons right">send</i>
+            </button>
+        </form>
+
+    </div>
+</body>
+<script>
+    $(document).ready(function(){
+        $('#numero').mask('(00) 00000-00009');
+        $('#numero').blur(function(event) {
+           if($(this).val().length == 15){ // Celular com 9 dígitos + 2 dígitos DDD e 4 da máscara
+              $(this).mask('(00) 00000-0009');
+           } else {
+              $(this).mask('(00) 0000-00009');
+           }
+        });
+    });
+</script>
+</html>
